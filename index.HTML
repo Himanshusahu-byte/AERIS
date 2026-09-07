@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Convective Nowcast | SIH 2026</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                <i class="fa-solid fa-cloud-bolt"></i>
+            </div>
+
+            <div>
+                <h2>CONVECTIVE</h2>
+                <span>NOWCAST</span>
+            </div>
+
+        </div>
+
+
+        <!-- Navigation -->
+
+        <nav class="nav-menu">
+
+            <button class="nav-item active" data-page="dashboard">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </button>
+
+
+            <button class="nav-item" data-page="map">
+                <i class="fa-solid fa-globe"></i>
+                <span>Live Map</span>
+            </button>
+
+
+            <button class="nav-item" data-page="forecast">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Forecast</span>
+            </button>
+
+
+            <button class="nav-item" data-page="alerts">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Alerts</span>
+            </button>
+
+
+            <button class="nav-item" data-page="layers">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Data Layers</span>
+            </button>
+
+
+            <button class="nav-item" data-page="reports">
+                <i class="fa-solid fa-file-lines"></i>
+                <span>Reports</span>
+            </button>
+
+
+            <button class="nav-item" data-page="settings">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </button>
+
+
+            <button class="nav-item" data-page="about">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>About</span>
+            </button>
+
+        </nav>
+
+
+        <!-- Sidebar Bottom -->
+
+        <div class="sidebar-footer">
+
+            <div class="system-status">
+                <span class="status-dot"></span>
+                System Operational
+            </div>
+        </div>
+
+    </aside>
+
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+
+        <!-- ================= TOP BAR ================= -->
+
+        <header class="topbar">
+
+            <div class="page-heading">
+
+                <h1 id="pageTitle">Weather Intelligence Dashboard</h1>
+
+                <p id="pageSubtitle">
+                    Real-time severe weather monitoring and nowcasting
+                </p>
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <!-- Search -->
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        id="locationSearch"
+                        placeholder="Search location..."
+                    >
+
+                </div>
+
+
+                <!-- Notification -->
+
+                <button class="icon-btn notification-btn">
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span class="notification-dot"></span>
+
+                </button>
+
+
+                <!-- Profile -->
+
+                <div class="profile">
+
+                   <!-- USER PROFILE -->
+<div class="user-profile">
+
+    <button class="profile-avatar" id="profileButton">
+        <span id="profileInitials">U</span>
+    </button>
+
+    <div class="profile-dropdown" id="profileDropdown">
+
+        <div class="profile-header">
+            <div class="profile-large-avatar" id="dropdownAvatar">
+                U
+            </div>
+
+            <div>
+                <strong id="profileName">Guest User</strong>
+                <span id="profileEmail">guest@nowcast.ai</span>
+            </div>
+        </div>
+
+        <div class="profile-divider"></div>
+
+        <button class="profile-menu-item" id="openProfile">
+            <i class="fas fa-user"></i>
+            <span>My Profile</span>
+        </button>
+
+        <div class="profile-divider"></div>
+
+        <button class="profile-menu-item logout-item" id="logoutButton">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </button>
+
+    </div>
+
+</div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ================================================= -->
+        <!-- DASHBOARD PAGE -->
+        <!-- ================================================= -->
+
+        <section class="page active-page" id="dashboard">
+
+
+            <!-- Hero Section -->
+
+            <div class="dashboard-hero">
+
+                <div>
+
+                    <div class="live-badge">
+
+                        <span class="pulse-dot"></span>
+
+                        LIVE MONITORING
+
+                    </div>
+
+
+                    <h2>
+                        Severe Weather Intelligence
+                    </h2>
+
+
+                    <p>
+                        AI-powered convective weather monitoring
+                        for the next 0–6 hours.
+                    </p>
+
+                </div>
+
+
+                <div class="location-card">
+
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    <div>
+
+                        <span>MONITORING LOCATION</span>
+
+                        <strong id="currentLocation">
+                            Indore, India
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Risk Cards -->
+
+            <div class="risk-grid">
+
+
+                <!-- Thunderstorm -->
+
+                <div class="risk-card thunderstorm">
+
+                    <div class="risk-icon">
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                    </div>
+
+
+                    <div class="risk-info">
+
+                        <span>THUNDERSTORM RISK</span>
+
+                        <h2 id="thunderRisk">78%</h2>
+
+                        <p class="high-risk">
+                            HIGH RISK
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Hail -->
+
+                <div class="risk-card hail">
+
+                    <div class="risk-icon">
+
+                        <i class="fa-solid fa-snowflake"></i>
+
+                    </div>
+
+
+                    <div class="risk-info">
+
+                        <span>HAIL RISK</span>
+
+                        <h2 id="hailRisk">34%</h2>
+
+                        <p class="moderate-risk">
+                            MODERATE
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Cloudburst -->
+
+                <div class="risk-card cloudburst">
+
+                    <div class="risk-icon">
+
+                        <i class="fa-solid fa-cloud-showers-heavy"></i>
+
+                    </div>
+
+
+                    <div class="risk-info">
+
+                        <span>CLOUDBURST RISK</span>
+
+                        <h2 id="cloudburstRisk">18%</h2>
+
+                        <p class="low-risk">
+                            LOW RISK
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Dashboard Grid -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- Weather Overview -->
+
+                <div class="panel weather-overview">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h3>Current Weather</h3>
+
+                            <p>Live atmospheric conditions</p>
+
+                        </div>
+
+
+                        <span class="live-indicator">
+
+                            <span></span>
+
+                            LIVE
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="weather-main">
+
+                        <div class="temperature">
+
+                            <i class="fa-solid fa-cloud-sun"></i>
+
+                            <h1 id="temperature">23°</h1>
+
+                            <span>C</span>
+
+                        </div>
+
+
+                        <div class="weather-details">
+
+                            <div>
+
+                                <i class="fa-solid fa-droplet"></i>
+
+                                <span>Humidity</span>
+
+                                <strong id="humidity">94%</strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <i class="fa-solid fa-wind"></i>
+
+                                <span>Wind</span>
+
+                                <strong id="windSpeed">13.6 km/h</strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <i class="fa-solid fa-cloud"></i>
+
+                                <span>Cloud Cover</span>
+
+                                <strong id="cloudCover">100%</strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- System Status -->
+
+                <div class="panel system-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h3>System Status</h3>
+
+                            <p>Nowcasting engine</p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="system-items">
+
+                        <div class="system-item">
+
+                            <div>
+
+                                <span class="green-dot"></span>
+
+                                Weather Data
+
+                            </div>
+
+                            <strong>ONLINE</strong>
+
+                        </div>
+
+
+                        <div class="system-item">
+
+                            <div>
+
+                                <span class="green-dot"></span>
+
+                                AI Engine
+
+                            </div>
+
+                            <strong>ACTIVE</strong>
+
+                        </div>
+
+
+                        <div class="system-item">
+
+                            <div>
+
+                                <span class="green-dot"></span>
+
+                                Risk Analysis
+
+                            </div>
+
+                            <strong>RUNNING</strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- Forecast Timeline -->
+
+            <div class="panel timeline-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>6-Hour Nowcast Timeline</h3>
+
+                        <p>Predicted severe weather risk progression</p>
+
+                    </div>
+
+
+                    <button class="view-btn">
+                        View Forecast
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                </div>
+
+
+                <div class="timeline">
+
+                    <div class="timeline-item">
+
+                        <span class="time">NOW</span>
+
+                        <div class="timeline-bar high"></div>
+
+                        <strong>High</strong>
+
+                    </div>
+
+
+                    <div class="timeline-item">
+
+                        <span class="time">+1 HR</span>
+
+                        <div class="timeline-bar high"></div>
+
+                        <strong>High</strong>
+
+                    </div>
+
+
+                    <div class="timeline-item">
+
+                        <span class="time">+2 HR</span>
+
+                        <div class="timeline-bar moderate"></div>
+
+                        <strong>Moderate</strong>
+
+                    </div>
+
+
+                    <div class="timeline-item">
+
+                        <span class="time">+3 HR</span>
+
+                        <div class="timeline-bar moderate"></div>
+
+                        <strong>Moderate</strong>
+
+                    </div>
+
+
+                    <div class="timeline-item">
+
+                        <span class="time">+4 HR</span>
+
+                        <div class="timeline-bar low"></div>
+
+                        <strong>Low</strong>
+
+                    </div>
+
+
+                    <div class="timeline-item">
+
+                        <span class="time">+5 HR</span>
+
+                        <div class="timeline-bar low"></div>
+
+                        <strong>Low</strong>
+
+                    </div>
+
+
+                    <div class="timeline-item">
+
+                        <span class="time">+6 HR</span>
+
+                        <div class="timeline-bar low"></div>
+
+                        <strong>Low</strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- LIVE MAP PAGE -->
+        <!-- ================================================= -->
+
+        <section class="page" id="map">
+
+            <div class="page-section-header">
+
+                <div>
+
+                    <h2>Live Severe Weather Map</h2>
+
+                    <p>
+                        Real-time visualization of convective weather activity
+                    </p>
+
+                </div>
+
+
+                <div class="map-actions">
+
+                    <button class="map-btn active">
+                        <i class="fa-solid fa-cloud-bolt"></i>
+                        Risk
+                    </button>
+
+                    <button class="map-btn">
+                        <i class="fa-solid fa-cloud-rain"></i>
+                        Rainfall
+                    </button>
+
+                    <button class="map-btn">
+                        <i class="fa-solid fa-wind"></i>
+                        Wind
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="map-container">
+
+                <div class="map-grid"></div>
+
+                <div class="map-placeholder">
+
+                    <i class="fa-solid fa-earth-asia"></i>
+
+                    <h2>LIVE WEATHER MONITORING MAP</h2>
+
+                    <p>
+                        Interactive severe weather visualization
+                    </p>
+
+                </div>
+
+
+                <div class="weather-marker marker-high">
+
+                    <i class="fa-solid fa-bolt"></i>
+
+                    <span>High Risk</span>
+
+                </div>
+
+
+                <div class="weather-marker marker-moderate">
+
+                    <i class="fa-solid fa-cloud-rain"></i>
+
+                    <span>Moderate</span>
+
+                </div>
+
+
+                <div class="weather-marker marker-low">
+
+                    <i class="fa-solid fa-cloud"></i>
+
+                    <span>Low Risk</span>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- FORECAST PAGE -->
+        <!-- ================================================= -->
+
+        <section class="page" id="forecast">
+
+            <div class="page-section-header">
+
+                <div>
+
+                    <h2>0–6 Hour Forecast</h2>
+
+                    <p>
+                        Short-term convective weather prediction timeline
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="forecast-summary">
+
+                <div class="forecast-summary-card">
+
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    <div>
+
+                        <span>LOCATION</span>
+
+                        <strong>Indore, India</strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="forecast-summary-card">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    <div>
+
+                        <span>FORECAST WINDOW</span>
+
+                        <strong>Next 6 Hours</strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="forecast-summary-card">
+
+                    <i class="fa-solid fa-bolt"></i>
+
+                    <div>
+
+                        <span>PEAK RISK</span>
+
+                        <strong class="high-text">Thunderstorm</strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="forecast-table-panel">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Time</th>
+
+                            <th>Temperature</th>
+
+                            <th>Thunderstorm</th>
+
+                            <th>Hail</th>
+
+                            <th>Cloudburst</th>
+
+                            <th>Risk Level</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>NOW</td>
+
+                            <td>23°C</td>
+
+                            <td>78%</td>
+
+                            <td>34%</td>
+
+                            <td>18%</td>
+
+                            <td>
+                                <span class="risk-badge high-badge">
+                                    HIGH
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>+1 Hour</td>
+
+                            <td>22°C</td>
+
+                            <td>72%</td>
+
+                            <td>30%</td>
+
+                            <td>20%</td>
+
+                            <td>
+                                <span class="risk-badge high-badge">
+                                    HIGH
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>+2 Hours</td>
+
+                            <td>22°C</td>
+
+                            <td>58%</td>
+
+                            <td>25%</td>
+
+                            <td>24%</td>
+
+                            <td>
+                                <span class="risk-badge moderate-badge">
+                                    MODERATE
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>+3 Hours</td>
+
+                            <td>21°C</td>
+
+                            <td>48%</td>
+
+                            <td>20%</td>
+
+                            <td>22%</td>
+
+                            <td>
+                                <span class="risk-badge moderate-badge">
+                                    MODERATE
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>+4 Hours</td>
+
+                            <td>21°C</td>
+
+                            <td>30%</td>
+
+                            <td>15%</td>
+
+                            <td>16%</td>
+
+                            <td>
+                                <span class="risk-badge low-badge">
+                                    LOW
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>+5 Hours</td>
+
+                            <td>20°C</td>
+
+                            <td>22%</td>
+
+                            <td>10%</td>
+
+                            <td>12%</td>
+
+                            <td>
+                                <span class="risk-badge low-badge">
+                                    LOW
+                                </span>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- ALERTS PAGE -->
+        <!-- ================================================= -->
+
+        <section class="page" id="alerts">
+
+            <div class="page-section-header">
+
+                <div>
+
+                    <h2>Weather Alerts</h2>
+
+                    <p>
+                        Active severe weather warnings and notifications
+                    </p>
+
+                </div>
+
+
+                <button class="clear-alert-btn">
+                    <i class="fa-solid fa-check"></i>
+                    Mark All Read
+                </button>
+
+            </div>
+
+
+            <div class="alerts-grid">
+
+
+                <div class="alert-card high-alert">
+
+                    <div class="alert-icon">
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                    </div>
+
+
+                    <div class="alert-content">
+
+                        <div>
+
+                            <span class="alert-level high-text">
+                                HIGH PRIORITY
+                            </span>
+
+                            <span class="alert-time">
+                                Just now
+                            </span>
+
+                        </div>
+
+
+                        <h3>
+                            Severe Thunderstorm Risk Detected
+                        </h3>
+
+
+                        <p>
+                            Strong convective activity may develop
+                            within the next 1–2 hours.
+                        </p>
+
+
+                        <button>View Details</button>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="alert-card moderate-alert">
+
+                    <div class="alert-icon">
+
+                        <i class="fa-solid fa-cloud-showers-heavy"></i>
+
+                    </div>
+
+
+                    <div class="alert-content">
+
+                        <div>
+
+                            <span class="alert-level moderate-text">
+                                MODERATE
+                            </span>
+
+                            <span class="alert-time">
+                                15 minutes ago
+                            </span>
+
+                        </div>
+
+
+                        <h3>
+                            Heavy Rainfall Possibility
+                        </h3>
+
+
+                        <p>
+                            High moisture levels detected in the
+                            monitored region.
+                        </p>
+
+
+                        <button>View Details</button>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="alert-card low-alert">
+
+                    <div class="alert-icon">
+
+                        <i class="fa-solid fa-cloud"></i>
+
+                    </div>
+
+
+                    <div class="alert-content">
+
+                        <div>
+
+                            <span class="alert-level low-text">
+                                INFORMATION
+                            </span>
+
+                            <span class="alert-time">
+                                1 hour ago
+                            </span>
+
+                        </div>
+
+
+                        <h3>
+                            Cloud Cover Increasing
+                        </h3>
+
+
+                        <p>
+                            Increasing cloud density observed
+                            across the monitored region.
+                        </p>
+
+
+                        <button>View Details</button>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- DATA LAYERS PAGE -->
+        <!-- ================================================= -->
+
+        <section class="page" id="layers">
+
+            <div class="page-section-header">
+
+                <div>
+
+                    <h2>Weather Data Layers</h2>
+
+                    <p>
+                        Control the atmospheric datasets displayed
+                        on the monitoring system.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="layers-grid">
+
+
+                <div class="layer-card active-layer">
+
+                    <div class="layer-icon">
+
+                        <i class="fa-solid fa-tower-broadcast"></i>
+
+                    </div>
+
+                    <h3>Weather Radar</h3>
+
+                    <p>
+                        Monitor precipitation and storm movement.
+                    </p>
+
+                    <label class="switch">
+
+                        <input type="checkbox" checked>
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+
+                <div class="layer-card">
+
+                    <div class="layer-icon">
+
+                        <i class="fa-solid fa-satellite"></i>
+
+                    </div>
+
+                    <h3>Satellite</h3>
+
+                    <p>
+                        Cloud formation and atmospheric observation.
+                    </p>
+
+                    <label class="switch">
+
+                        <input type="checkbox">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+
+                <div class="layer-card">
+
+                    <div class="layer-icon">
+
+                        <i class="fa-solid fa-cloud-rain"></i>
+
+                    </div>
+
+                    <h3>Rainfall</h3>
+
+                    <p>
+                        Rainfall intensity and precipitation zones.
+                    </p>
+
+                    <label class="switch">
+
+                        <input type="checkbox">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+
+                <div class="layer-card">
+
+                    <div class="layer-icon">
+
+                        <i class="fa-solid fa-wind"></i>
+
+                    </div>
+
+                    <h3>Wind</h3>
+
+                    <p>
+                        Wind speed and directional movement.
+                    </p>
+
+                    <label class="switch">
+
+                        <input type="checkbox">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+
+                <div class="layer-card">
+
+                    <div class="layer-icon">
+
+                        <i class="fa-solid fa-cloud"></i>
+
+                    </div>
+
+                    <h3>Cloud Cover</h3>
+
+                    <p>
+                        Monitor cloud density and development.
+                    </p>
+
+                    <label class="switch">
+
+                        <input type="checkbox">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+
+                <div class="layer-card">
+
+                    <div class="layer-icon">
+
+                        <i class="fa-solid fa-temperature-half"></i>
+
+                    </div>
+
+                    <h3>Temperature</h3>
+
+                    <p>
+                        Surface temperature distribution.
+                    </p>
+
+                    <label class="switch">
+
+                        <input type="checkbox">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- REPORTS PAGE -->
+        <!-- ================================================= -->
+
+        <section class="page" id="reports">
+
+            <div class="page-section-header">
+
+                <div>
+
+                    <h2>Weather Intelligence Reports</h2>
+
+                    <p>
+                        Generated analysis and severe weather summaries
+                    </p>
+
+                </div>
+
+
+                <button class="generate-report-btn">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Generate Report
+
+                </button>
+
+            </div>
+
+
+            <div class="reports-grid">
+
+
+                <div class="report-card">
+
+                    <div class="report-icon">
+
+                        <i class="fa-solid fa-file-lines"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>DAILY REPORT</span>
+
+                        <h3>
+                            Convective Weather Summary
+                        </h3>
+
+                        <p>
+                            Monitoring and risk analysis for
+                            the current day.
+                        </p>
+
+                    </div>
+
+
+                    <button>
+
+                        <i class="fa-solid fa-download"></i>
+
+                    </button>
+
+                </div>
+
+
+
+                <div class="report-card">
+
+                    <div class="report-icon">
+
+                        <i class="fa-solid fa-chart-line"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>RISK ANALYSIS</span>
+
+                        <h3>
+                            Severe Weather Risk Report
+                        </h3>
+
+                        <p>
+                            Thunderstorm, hail and cloudburst
+                            probability analysis.
+                        </p>
+
+                    </div>
+
+
+                    <button>
+
+                        <i class="fa-solid fa-download"></i>
+
+                    </button>
+
+                </div>
+
+
+
+                <div class="report-card">
+
+                    <div class="report-icon">
+
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>HISTORICAL DATA</span>
+
+                        <h3>
+                            Previous Weather Events
+                        </h3>
+
+                        <p>
+                            Historical severe weather observations
+                            and patterns.
+                        </p>
+
+                    </div>
+
+
+                    <button>
+
+                        <i class="fa-solid fa-download"></i>
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- SETTINGS PAGE -->
+        <!-- ================================================= -->
+
+        <section class="page" id="settings">
+
+            <div class="page-section-header">
+
+                <div>
+
+                    <h2>System Settings</h2>
+
+                    <p>
+                        Configure monitoring preferences and alerts
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-container">
+
+
+                <div class="settings-card">
+
+                    <h3>Location Settings</h3>
+
+
+                    <div class="setting-row">
+
+                        <div>
+
+                            <strong>Default Location</strong>
+
+                            <span>
+                                Indore, Madhya Pradesh
+                            </span>
+
+                        </div>
+
+
+                        <button class="setting-btn">
+                            Change
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="settings-card">
+
+                    <h3>Alert Preferences</h3>
+
+
+                    <div class="setting-row">
+
+                        <div>
+
+                            <strong>Severe Weather Alerts</strong>
+
+                            <span>
+                                Receive high-risk weather notifications
+                            </span>
+
+                        </div>
+
+
+                        <label class="switch">
+
+                            <input type="checkbox" checked>
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="setting-row">
+
+                        <div>
+
+                            <strong>Sound Alerts</strong>
+
+                            <span>
+                                Enable alert notification sounds
+                            </span>
+
+                        </div>
+
+
+                        <label class="switch">
+
+                            <input type="checkbox">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="settings-card">
+
+                    <h3>Display Settings</h3>
+
+
+                    <div class="setting-row">
+
+                        <div>
+
+                            <strong>Temperature Unit</strong>
+
+                            <span>
+                                Celsius
+                            </span>
+
+                        </div>
+
+
+                        <select>
+
+                            <option>Celsius</option>
+
+                            <option>Fahrenheit</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- ABOUT PAGE -->
+        <!-- ================================================= -->
+
+        <section class="page" id="about">
+
+            <div class="about-container">
+
+
+                <div class="about-hero">
+
+                    <div class="about-logo">
+
+                        <i class="fa-solid fa-cloud-bolt"></i>
+
+                    </div>
+
+
+                    <h2>
+                        CONVECTIVE NOWCAST
+                    </h2>
+
+
+                    <p>
+                        AI-Powered Severe Weather Intelligence Platform
+                    </p>
+
+                </div>
+
+
+                <div class="about-grid">
+
+
+                    <div class="about-card">
+
+                        <span>PROBLEM ID</span>
+
+                        <h3>SIH26084</h3>
+
+                        <p>
+                            Convective-Scale Nowcasting for Thunderstorms,
+                            Hail & Cloudbursts (6 Hour Window)
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="about-card">
+
+                        <span>FORECAST WINDOW</span>
+
+                        <h3>0–6 Hours</h3>
+
+                        <p>
+                            Short-term severe weather prediction
+                            and risk intelligence.
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="about-card">
+
+                        <span>TECHNOLOGY</span>
+
+                        <h3>AI + Weather Data</h3>
+
+                        <p>
+                            Python, FastAPI, Machine Learning,
+                            Weather APIs and Web Technologies.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="project-mission">
+
+                    <h2>Our Mission</h2>
+
+                    <p>
+                        Transform rapidly changing atmospheric data into
+                        early, location-specific and actionable severe
+                        weather intelligence.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- JavaScript -->
+    <script src="script.js" defer></script>
+
+
+<!-- =========================================
+     LOGIN MODAL
+========================================= -->
+
+<div class="login-overlay" id="loginOverlay">
+
+    <div class="login-modal">
+
+        <button
+            class="close-login"
+            id="closeLogin"
+            type="button"
+        >
+            &times;
+        </button>
+
+        <!-- Logo -->
+        <div class="login-logo">
+            <i class="fas fa-cloud-bolt"></i>
+        </div>
+
+        <h2>Welcome to NowCast AI</h2>
+
+        <p class="login-subtitle">
+            Sign in to access your weather intelligence dashboard
+        </p>
+
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm">
+
+            <!-- Full Name -->
+            <div class="form-group">
+
+                <label>Full Name</label>
+
+                <div class="input-wrapper">
+
+                    <i class="fas fa-user"></i>
+
+                    <input
+                        type="text"
+                        id="loginName"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Email -->
+            <div class="form-group">
+
+                <label>Email Address</label>
+
+                <div class="input-wrapper">
+
+                    <i class="fas fa-envelope"></i>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Password -->
+            <div class="form-group">
+
+                <label>Password</label>
+
+                <div class="input-wrapper">
+
+                    <i class="fas fa-lock"></i>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        minlength="6"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        id="passwordToggle"
+                    >
+                        <i class="fas fa-eye"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- OPTIONS -->
+            <div class="login-options">
+
+                <label class="remember-me">
+
+                    <input
+                        type="checkbox"
+                        id="rememberMe"
+                    >
+
+                    <span>Remember me</span>
+
+                </label>
+
+                <a
+                    href="#"
+                    id="forgotPassword"
+                >
+                    Forgot password?
+                </a>
+
+            </div>
+
+
+            <!-- SIGN IN -->
+            <button
+                type="submit"
+                class="login-submit"
+            >
+
+                <i class="fas fa-right-to-bracket"></i>
+
+                Sign In
+
+            </button>
+
+        </form>
+
+
+        <!-- DIVIDER -->
+        <div class="login-divider">
+            <span>OR</span>
+        </div>
+
+
+        <!-- GUEST -->
+        <button
+            class="guest-login"
+            id="guestLogin"
+            type="button"
+        >
+            Continue as Guest
+        </button>
+
+
+        <p class="login-footer">
+            Convective-Scale Nowcasting • SIH 26084
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     PROFILE MODAL
+========================================= -->
+
+<div class="profile-modal-overlay" id="profileModal">
+
+    <div class="profile-modal">
+
+        <button
+            class="close-login"
+            id="closeProfileModal"
+        >
+            &times;
+        </button>
+
+        <div class="profile-large-avatar profile-modal-avatar"
+             id="modalAvatar">
+            U
+        </div>
+
+        <h2 id="modalProfileName">
+            Guest User
+        </h2>
+
+        <p id="modalProfileEmail">
+            guest@nowcast.ai
+        </p>
+
+        <div class="profile-info">
+
+            <div>
+                <span>Account Type</span>
+                <strong id="accountType">
+                    Guest
+                </strong>
+            </div>
+
+            <div>
+                <span>Monitoring Access</span>
+                <strong class="online-text">
+                    Active
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
