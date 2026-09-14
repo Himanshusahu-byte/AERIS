@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
        CONFIGURATION
     ===================================================== */
 
-    const API_BASE = " https://aeris-1-8wfy.onrender.com";
+    const API_BASE = "https://aeris-1-8wfy.onrender.com";
 
 
     /* =====================================================
