@@ -5,6 +5,7 @@ import hashlib
 import math
 import secrets
 import sqlite3
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -334,8 +335,44 @@ HOURLY_VARS = [
     "weather_code",
 ]
 
+# ============================================================
+# WEATHER CACHE
+# ============================================================
 
+WEATHER_CACHE = {}
+
+# Cache weather data for 10 minutes.
+# This prevents repeated Open-Meteo requests for the same location.
+WEATHER_CACHE_TTL = 600
+
+
+def weather_cache_key(latitude: float, longitude: float) -> str:
+    return f"{round(latitude, 2)}:{round(longitude, 2)}"
+
+
+def get_cached_weather(latitude: float, longitude: float):
+    key = weather_cache_key(latitude, longitude)
+    cached = WEATHER_CACHE.get(key)
+
+    if not cached:
+        return None
+
+    timestamp, data = cached
+
+    if time.time() - timestamp > WEATHER_CACHE_TTL:
+        WEATHER_CACHE.pop(key, None)
+        return None
+
+    return data
 def fetch_weather(latitude: float, longitude: float) -> dict:
+    # --------------------------------------------------------
+    # 1. Check cache first
+    # --------------------------------------------------------
+    cached_data = get_cached_weather(latitude, longitude)
+
+    if cached_data is not None:
+        return cached_data
+
     params = {
         "latitude": latitude,
         "longitude": longitude,
@@ -345,20 +382,65 @@ def fetch_weather(latitude: float, longitude: float) -> dict:
         "timezone": "auto",
     }
 
+    headers = {
+        "User-Agent": "Convective-Nowcast-SIH26084/2.0"
+    }
+
+    # --------------------------------------------------------
+    # 2. Request Open-Meteo
+    # --------------------------------------------------------
     try:
         response = requests.get(
             OPEN_METEO_FORECAST,
             params=params,
+            headers=headers,
             timeout=15,
         )
+
+        # ----------------------------------------------------
+        # 3. Handle rate limiting
+        # ----------------------------------------------------
+        if response.status_code == 429:
+
+            # If old cached data exists, use it.
+            key = weather_cache_key(latitude, longitude)
+            old_cached = WEATHER_CACHE.get(key)
+
+            if old_cached:
+                return old_cached[1]
+
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "Weather provider is temporarily rate-limited. "
+                    "Please try again shortly."
+                ),
+            )
+
         response.raise_for_status()
-        return response.json()
+
+        data = response.json()
+
+        # ----------------------------------------------------
+        # 4. Save successful response in cache
+        # ----------------------------------------------------
+        key = weather_cache_key(latitude, longitude)
+
+        WEATHER_CACHE[key] = (
+            time.time(),
+            data,
+        )
+
+        return data
+
+    except HTTPException:
+        raise
+
     except requests.RequestException as exc:
         raise HTTPException(
             status_code=502,
             detail=f"Weather service unavailable: {exc}",
         )
-
 
 def nearest_forecast_index(times: list[str], target: str | None = None) -> int:
     if not times:
