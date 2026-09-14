@@ -1214,138 +1214,122 @@ if (cloudCover) {
         }
     }
 
-
+/* =====================================================
+   UPDATE RISK CARDS
+   REAL BACKEND DATA
+===================================================== */
 function updateRiskCards(currentRisk) {
     console.log("Updating risk cards:", currentRisk);
 
     if (!currentRisk) {
-        console.warn("No risk data received");
+        console.warn("No current risk data received.");
         return;
     }
 
-    function getRiskValue(risk) {
-        if (typeof risk === "number") return risk;
+    function getScore(risk) {
+        if (risk == null) return 0;
 
-        if (typeof risk === "string") {
-            const value = parseFloat(risk);
-            return isNaN(value) ? 0 : value;
+        if (typeof risk === "number") {
+            return Number(risk);
         }
 
-        if (typeof risk === "object" && risk !== null) {
-            return (
+        if (typeof risk === "string") {
+            const n = parseFloat(risk);
+            return Number.isFinite(n) ? n : 0;
+        }
+
+        if (typeof risk === "object") {
+            const n = Number(
+                risk.score ??
                 risk.percentage ??
                 risk.percent ??
-                risk.score ??
-                risk.risk ??
-                risk.value ??
                 risk.probability ??
+                risk.value ??
                 0
             );
+
+            return Number.isFinite(n) ? n : 0;
         }
 
         return 0;
     }
 
-    function getRiskLevel(risk, value) {
-        if (typeof risk === "object" && risk !== null) {
-            if (risk.level) return String(risk.level).toUpperCase();
-            if (risk.category) return String(risk.category).toUpperCase();
-            if (risk.status) return String(risk.status).toUpperCase();
+    function getLevel(risk, score) {
+        if (risk && typeof risk === "object" && risk.level) {
+            return String(risk.level).toUpperCase();
         }
 
-        if (value >= 70) return "HIGH";
-        if (value >= 40) return "MODERATE";
+        if (score >= 70) return "HIGH";
+        if (score >= 40) return "MODERATE";
         return "LOW";
     }
 
-    const thunderstormValue = Math.round(
-        getRiskValue(currentRisk.thunderstorm)
-    );
+    function updateCard(id, cardClass, risk) {
 
-    const thunderstormElement =
-        document.getElementById("thunderstormRisk");
+        const score = Math.round(getScore(risk));
+        const level = getLevel(risk, score);
 
-    if (thunderstormElement) {
-        thunderstormElement.textContent =
-            `${thunderstormValue}%`;
+        const valueElement =
+            document.getElementById(id) ||
+            document.querySelector(
+                `${cardClass} h2`
+            );
 
-        const level = getRiskLevel(
-            currentRisk.thunderstorm,
-            thunderstormValue
-        );
+        if (!valueElement) {
+            console.warn("Risk element not found:", id);
+            return;
+        }
+
+        valueElement.textContent = `${score}%`;
 
         const card =
-            thunderstormElement.closest(".risk-card-thunderstorm");
+            valueElement.closest(cardClass);
 
-        const levelElement = card?.querySelector("p");
+        if (!card) return;
+
+        const levelElement =
+            card.querySelector("p");
 
         if (levelElement) {
+
             levelElement.textContent = level;
+
+            levelElement.classList.remove(
+                "high-risk",
+                "moderate-risk",
+                "low-risk"
+            );
+
+            levelElement.classList.add(
+                `${level.toLowerCase()}-risk`
+            );
         }
     }
 
-    const hailValue = Math.round(
-        getRiskValue(currentRisk.hail)
+    updateCard(
+        "thunderstormRisk",
+        ".risk-card.thunderstorm",
+        currentRisk.thunderstorm
     );
 
-    const hailElement =
-        document.getElementById("hailRisk");
-
-    if (hailElement) {
-        hailElement.textContent = `${hailValue}%`;
-
-        const level = getRiskLevel(
-            currentRisk.hail,
-            hailValue
-        );
-
-        const card =
-            hailElement.closest(".risk-card-hail");
-
-        const levelElement = card?.querySelector("p");
-
-        if (levelElement) {
-            levelElement.textContent = level;
-        }
-    }
-
-    const cloudburstValue = Math.round(
-        getRiskValue(currentRisk.cloudburst)
+    updateCard(
+        "hailRisk",
+        ".risk-card-hail",
+        currentRisk.hail
     );
 
-    const cloudburstElement =
-        document.getElementById("cloudburstRisk");
+    updateCard(
+        "cloudburstRisk",
+        ".risk-card-cloudburst",
+        currentRisk.cloudburst
+    );
 
-    if (cloudburstElement) {
-        cloudburstElement.textContent =
-            `${cloudburstValue}%`;
-
-        const level = getRiskLevel(
-            currentRisk.cloudburst,
-            cloudburstValue
-        );
-
-        const card =
-            cloudburstElement.closest(".risk-card-cloudburst");
-
-        const levelElement = card?.querySelector("p");
-
-        if (levelElement) {
-            levelElement.textContent = level;
-        }
-    }
-
-    console.log("Risk cards updated:", {
-        thunderstorm: thunderstormValue,
-        hail: hailValue,
-        cloudburst: cloudburstValue
+    console.log("Risk cards updated successfully:", {
+        thunderstorm: getScore(currentRisk.thunderstorm),
+        hail: getScore(currentRisk.hail),
+        cloudburst: getScore(currentRisk.cloudburst)
     });
 }
-
-
-    /* =====================================================
-   REAL WEATHER DATA → NOWCAST UI
-===================================================== */
 
 function updateNowcastUI(nowcast) {
 
@@ -1357,117 +1341,52 @@ function updateNowcastUI(nowcast) {
     }
 
     /* =================================================
-       1. DASHBOARD RISK CARDS
+       1. FORECAST TABLE
     ================================================= */
 
-    const current = nowcast[0];
+    const tableBody =
+        document.querySelector(".forecast-table tbody");
 
-    if (current && current.risks) {
+    if (tableBody) {
 
-        // Thunderstorm
-        const thunderstormScore =
-            document.querySelector(".thunderstorm-risk");
-
-        if (thunderstormScore) {
-            thunderstormScore.textContent =
-                `${Math.round(current.risks.thunderstorm.score)}%`;
-        }
-
-
-        // Hail
-        const hailScore =
-            document.querySelector(".hail-risk");
-
-        if (hailScore) {
-            hailScore.textContent =
-                `${Math.round(current.risks.hail.score)}%`;
-        }
-
-
-        // Cloudburst
-        const cloudburstScore =
-            document.querySelector(".cloudburst-risk");
-
-        if (cloudburstScore) {
-            cloudburstScore.textContent =
-                `${Math.round(current.risks.cloudburst.score)}%`;
-        }
-    }
-
-
-    /* =================================================
-       2. FORECAST TABLE
-    ================================================= */
-
-    const forecastRows =
-        document.querySelectorAll(".forecast-table tbody tr");
-
-    if (forecastRows.length > 0) {
+        tableBody.innerHTML = "";
 
         nowcast.forEach((item, index) => {
 
-            if (!forecastRows[index]) return;
+            const row =
+                document.createElement("tr");
 
-            const cells =
-                forecastRows[index].querySelectorAll("td");
+            const weather =
+                item.weather || {};
 
-            if (cells.length < 6) return;
+            const risks =
+                item.risks || {};
 
-            const weather = item.weather;
-            const risks = item.risks;
+            const thunderstorm =
+                Number(risks.thunderstorm?.score || 0);
 
-            /* Time */
+            const hail =
+                Number(risks.hail?.score || 0);
 
-            if (index === 0) {
+            const cloudburst =
+                Number(risks.cloudburst?.score || 0);
 
-                cells[0].textContent = "NOW";
+            const temperature =
+                Number(weather.temperature || 0);
 
-            } else {
+            const thunderstormLevel =
+                risks.thunderstorm?.level || "LOW";
 
-                cells[0].textContent =
-                    `+${index} Hour`;
+            const hailLevel =
+                risks.hail?.level || "LOW";
 
-            }
-
-
-            /* Temperature */
-
-            cells[1].textContent =
-                `${Math.round(weather.temperature)}°C`;
-
-
-            /* Thunderstorm */
-
-            cells[2].textContent =
-                `${Math.round(risks.thunderstorm.score)}%`;
-
-
-            /* Hail */
-
-            cells[3].textContent =
-                `${Math.round(risks.hail.score)}%`;
-
-
-            /* Cloudburst */
-
-            cells[4].textContent =
-                `${Math.round(risks.cloudburst.score)}%`;
+            const cloudburstLevel =
+                risks.cloudburst?.level || "LOW";
 
 
             /* Overall Risk */
 
-            const thunderstormLevel =
-                risks.thunderstorm.level;
-
-            const hailLevel =
-                risks.hail.level;
-
-            const cloudburstLevel =
-                risks.cloudburst.level;
-
-
             let overallLevel = "LOW";
-
 
             if (
                 thunderstormLevel === "HIGH" ||
@@ -1487,268 +1406,196 @@ function updateNowcastUI(nowcast) {
             }
 
 
-            cells[5].textContent =
-                overallLevel;
+            /* Time */
+
+            const time =
+                index === 0
+                    ? "NOW"
+                    : `+${index} Hour`;
 
 
-            /* Risk badge class */
+            row.innerHTML = `
+                <td>${time}</td>
 
-            const badge =
-                cells[5].querySelector("span");
+                <td>
+                    ${Math.round(temperature)}°C
+                </td>
 
-            if (badge) {
+                <td>
+                    ${Math.round(thunderstorm)}%
+                </td>
 
-                badge.textContent =
-                    overallLevel;
+                <td>
+                    ${Math.round(hail)}%
+                </td>
 
-                badge.className =
-                    `risk-badge ${overallLevel.toLowerCase()}`;
+                <td>
+                    ${Math.round(cloudburst)}%
+                </td>
 
-            }
+                <td>
+                    <span class="risk-badge ${overallLevel.toLowerCase()}">
+                        ${overallLevel}
+                    </span>
+                </td>
+            `;
 
+            tableBody.appendChild(row);
         });
     }
 
 
     /* =================================================
-       3. DASHBOARD NOWCAST TIMELINE
+       2. DASHBOARD 6-HOUR TIMELINE
     ================================================= */
 
     const timelineItems =
-        document.querySelectorAll(
-            ".nowcast-item, .timeline-item"
-        );
-
-    if (timelineItems.length > 0) {
-
-        nowcast.forEach((item, index) => {
-
-            if (!timelineItems[index]) return;
-
-            const risks = item.risks;
-
-            const thunderstorm =
-                risks.thunderstorm.score;
-
-            const hail =
-                risks.hail.score;
-
-            const cloudburst =
-                risks.cloudburst.score;
+        document.querySelectorAll(".timeline-item");
 
 
-            const maxRisk =
-                Math.max(
-                    thunderstorm,
-                    hail,
-                    cloudburst
-                );
+    timelineItems.forEach((item, index) => {
+
+        if (!nowcast[index]) {
+            return;
+        }
 
 
-            let level = "Low";
+        const data =
+            nowcast[index];
+
+        const weather =
+            data.weather || {};
+
+        const risks =
+            data.risks || {};
 
 
-            if (maxRisk >= 75) {
+        const thunderstorm =
+            Number(
+                risks.thunderstorm?.score || 0
+            );
 
-                level = "High";
+        const hail =
+            Number(
+                risks.hail?.score || 0
+            );
 
-            } else if (maxRisk >= 45) {
+        const cloudburst =
+            Number(
+                risks.cloudburst?.score || 0
+            );
 
-                level = "Moderate";
 
+        /* Calculate overall risk */
+
+        const maxRisk =
+            Math.max(
+                thunderstorm,
+                hail,
+                cloudburst
+            );
+
+
+        let level = "LOW";
+
+
+        if (maxRisk >= 75) {
+
+            level = "HIGH";
+
+        } else if (maxRisk >= 45) {
+
+            level = "MODERATE";
+        }
+
+
+        /* TIME */
+
+        const timeElement =
+            item.querySelector(".time");
+
+        if (timeElement) {
+
+            if (index === 0) {
+
+                timeElement.textContent =
+                    "NOW";
+
+            } else {
+
+                timeElement.textContent =
+                    `+${index} HR`;
+            }
+        }
+
+
+        /* RISK LABEL */
+
+        const label =
+            item.querySelector("strong");
+
+        if (label) {
+
+            label.textContent =
+                level.charAt(0) +
+                level.slice(1).toLowerCase();
+        }
+
+
+        /* RISK BAR */
+
+        const bar =
+            item.querySelector(".timeline-bar");
+
+        if (bar) {
+
+            bar.classList.remove(
+                "high",
+                "moderate",
+                "low"
+            );
+
+            bar.classList.add(
+                level.toLowerCase()
+            );
+
+
+            /* Dynamic bar height */
+
+            if (level === "HIGH") {
+
+                bar.style.height = "65px";
+
+            } else if (level === "MODERATE") {
+
+                bar.style.height = "50px";
+
+            } else {
+
+                bar.style.height = "35px";
             }
 
 
-            const label =
-                timelineItems[index]
-                    .querySelector(".risk-label");
+            /* Extra data for debugging */
 
+            bar.setAttribute(
+                "data-risk",
+                level
+            );
 
-            if (label) {
+            bar.setAttribute(
+                "data-score",
+                maxRisk
+            );
+        }
 
-                label.textContent = level;
-
-            }
-
-        });
-    }
+    });
 
 
     console.log(
         "Nowcast UI updated successfully."
     );
 }
-
-    /* =====================================================
-       UPDATE NOWCAST UI
-    ===================================================== */
-
-    function updateNowcastUI(
-        nowcast
-    ) {
-
-        if (!Array.isArray(nowcast)) {
-
-            console.warn(
-                "Nowcast data is not an array."
-            );
-
-            return;
-        }
-
-
-        console.log(
-            "Updating nowcast UI:",
-            nowcast
-        );
-
-
-        /* -----------------------------------------
-           FORECAST TABLE
-        ----------------------------------------- */
-
-        const tableBody =
-            document.querySelector(
-                ".forecast-table tbody"
-            );
-
-
-        if (
-            tableBody &&
-            nowcast.length > 0
-        ) {
-
-            tableBody.innerHTML = "";
-
-
-            nowcast.forEach(
-                (item, index) => {
-
-                    const row =
-                        document.createElement(
-                            "tr"
-                        );
-
-
-                    const time =
-                        item.time ||
-                        item.datetime ||
-                        `+${index} Hour`;
-
-
-                    const temperature =
-                        item.temperature ??
-                        item.temperature_2m ??
-                        "--";
-
-
-                    const thunderstorm =
-                        item.thunderstorm ??
-                        item.thunderstorm_probability ??
-                        0;
-
-
-                    const hail =
-                        item.hail ??
-                        item.hail_probability ??
-                        0;
-
-
-                    const cloudburst =
-                        item.cloudburst ??
-                        item.cloudburst_probability ??
-                        0;
-
-
-                    const risk =
-                        item.risk_level ||
-                        calculateRiskLevel(
-                            thunderstorm,
-                            hail,
-                            cloudburst
-                        );
-
-
-                    row.innerHTML = `
-
-                        <td>${formatForecastTime(time, index)}</td>
-
-                        <td>${Math.round(Number(temperature))}°C</td>
-
-                        <td>${Math.round(Number(thunderstorm))}%</td>
-
-                        <td>${Math.round(Number(hail))}%</td>
-
-                        <td>${Math.round(Number(cloudburst))}%</td>
-
-                        <td>
-                            <span class="risk-badge ${risk.toLowerCase()}">
-                                ${risk}
-                            </span>
-                        </td>
-                    `;
-
-
-                    tableBody.appendChild(
-                        row
-                    );
-                }
-            );
-        }
-
-
-        /* -----------------------------------------
-           FORECAST TIMELINE
-        ----------------------------------------- */
-
-        const timelineBars =
-            $$(".timeline-bar");
-
-
-        timelineBars.forEach(
-            (bar, index) => {
-
-                if (
-                    !nowcast[index]
-                ) {
-                    return;
-                }
-
-
-                const item =
-                    nowcast[index];
-
-
-                const risk =
-                    item.risk_level ||
-                    calculateRiskLevel(
-                        item.thunderstorm || 0,
-                        item.hail || 0,
-                        item.cloudburst || 0
-                    );
-
-
-                bar.setAttribute(
-                    "data-risk",
-                    risk
-                );
-
-
-                bar.style.height =
-                    `${50 + riskHeight(risk)}px`;
-            }
-        );
-
-
-        /* -----------------------------------------
-           RISK CARDS
-        ----------------------------------------- */
-
-        updateRiskCards(
-            nowcast
-        );
-    }
-
 
     /* =====================================================
        FORECAST TIME FORMAT
@@ -1857,73 +1704,6 @@ function updateNowcastUI(nowcast) {
 
         return 5;
     }
-
-
-    /* =====================================================
-       RISK CARDS
-    ===================================================== */
-
-    function updateRiskCards(
-        nowcast
-    ) {
-
-        if (
-            !nowcast ||
-            nowcast.length === 0
-        ) {
-            return;
-        }
-
-
-        const first =
-            nowcast[0];
-
-
-        const thunderstorm =
-            Number(
-                first.thunderstorm ||
-                first.thunderstorm_probability ||
-                0
-            );
-
-
-        const hail =
-            Number(
-                first.hail ||
-                first.hail_probability ||
-                0
-            );
-
-
-        const cloudburst =
-            Number(
-                first.cloudburst ||
-                first.cloudburst_probability ||
-                0
-            );
-
-
-        /* Find common risk value elements */
-
-        const riskValues =
-            $$(".risk-value");
-
-
-        if (
-            riskValues.length >= 3
-        ) {
-
-            riskValues[0].textContent =
-                `${Math.round(thunderstorm)}%`;
-
-            riskValues[1].textContent =
-                `${Math.round(hail)}%`;
-
-            riskValues[2].textContent =
-                `${Math.round(cloudburst)}%`;
-        }
-    }
-
 
     /* =====================================================
        MAP BUTTONS
